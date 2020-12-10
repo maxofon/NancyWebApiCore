@@ -1,4 +1,6 @@
-﻿namespace NancyWebApiCore.Helpers
+﻿using NancyWebApiCore.Helpers;
+
+namespace NancyWebApiCore.Interfaces
 {
     public interface IAppConfiguration
     {

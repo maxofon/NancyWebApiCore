@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWebApiCore", "NancyWebApiCore\NancyWebApiCore.csproj", "{2670C400-05B0-46E0-9FAD-762E3AD59F4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWebApiCore.Tests", "NancyWebApiCore.Tests\NancyWebApiCore.Tests.csproj", "{FFA01383-DD86-4412-8667-DD025C233BD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2670C400-05B0-46E0-9FAD-762E3AD59F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2670C400-05B0-46E0-9FAD-762E3AD59F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2670C400-05B0-46E0-9FAD-762E3AD59F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFA01383-DD86-4412-8667-DD025C233BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA01383-DD86-4412-8667-DD025C233BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA01383-DD86-4412-8667-DD025C233BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA01383-DD86-4412-8667-DD025C233BD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

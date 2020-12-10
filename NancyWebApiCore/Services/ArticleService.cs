@@ -1,123 +1,98 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using NancyWebApiCore.Entities;
-using NancyWebApiCore.Helpers;
 using NancyWebApiCore.Interfaces;
 using NancyWebApiCore.Modules;
 using NancyWebApiCore.Views;
-using Newtonsoft.Json;
 
 namespace NancyWebApiCore.Services
 {
     public class ArticleService : IArticleService
     {
-        private readonly HttpClient _httpClient;
-        private readonly IAppConfiguration _config;
+        private readonly IHttpClientService _httpClientService;
 
-        public ArticleService(HttpClient httpClient, IAppConfiguration config)
+        public ArticleService(IHttpClientService httpClientService)
         {
-            _httpClient = httpClient;
-            _config = config;
+            _httpClientService = httpClientService;
         }
 
-        public async Task<bool> IsServiceWorking()
+        public async Task<bool> IsServiceWorkingAsync()
         {
-            var query = GetDefualtQuery();
-            var response = await _httpClient.GetAsync(query);
-            var result = response.IsSuccessStatusCode;
+            var result = await _httpClientService.IsServiceWorkingAsync();
             return result;
         }
 
-        public async Task<IEnumerable<ArticleView>> GetArticlesBySection(string section)
+        public async Task<IEnumerable<ArticleView>> GetArticlesBySectionAsync(string section)
         {
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticles(section);
+            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
             var articleViews = articleViewsEnumerable.ToList();
 
             return articleViews;
         }
 
-        public async Task<ArticleView> GetFirstArticleBySection(string section)
+        public async Task<ArticleView> GetFirstArticleBySectionAsync(string section)
         {
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticles(section);
+            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
             var firstArticleView = articleViewsEnumerable.FirstOrDefault();
 
             return firstArticleView;
         }
 
-        public async Task<IEnumerable<ArticleView>> GetArticlesBySectionAndDate(string section, string stringDate)
+        public async Task<IEnumerable<ArticleView>> GetArticlesBySectionAndDateAsync(string section, string stringDate)
         {
             var updatedDate = ParseDate(stringDate);
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticles(section);
+            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
             var articleViews = articleViewsEnumerable.Where(x => x.Updated.Date == updatedDate).ToList();
 
             return articleViews;
         }
 
-        public async Task<ArticleView> GetArticlesByShortUrl(string shortUrl)
+        public async Task<ArticleView> GetArticlesByShortUrlAsync(string shortUrl)
         {
             CheckUrl(shortUrl);
 
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticles();
+            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync();
             var articleView = articleViewsEnumerable.FirstOrDefault(x => x.Link.EndsWith(shortUrl));
 
             return articleView;
         }
 
-        public async Task<IEnumerable<ArticleGroupByDateView>> GetArticleGroupByDateViews(string section)
+        public async Task<IEnumerable<ArticleGroupByDateView>> GetArticleGroupByDateViewsAsync(string section)
         {
-            var query = GetQuery(section);
-            var response = await _httpClient.GetAsync(query);
-            IEnumerable<ArticleGroupByDateView> articleGroupByDateViewsEnumerable = await GetGroups(response);
-            var articleGroupByDateViews = articleGroupByDateViewsEnumerable.ToList();
+            var articleGroupByDateViews = await GetGroupViewsAsync(section);
 
             return articleGroupByDateViews;
         }
 
-        private string GetDefualtQuery()
+        private async Task<IEnumerable<ArticleView>> GetArticleViewsAsync(string section = "")
         {
-            return GetQuery(_config.NytSettings.DefaultSection);
-        }
+            var articles = await _httpClientService.GetArticlesAsync(section);
 
-        private string GetQuery(string section)
-        {
-            return string.Format(_config.NytSettings.BaseUrl, section, _config.NytSettings.ApiKey);
-        }
-
-        private async Task<IEnumerable<ArticleView>> GetArticles(string section = null)
-        {
-            var query = section != null ? GetQuery(section) : GetDefualtQuery();
-
-            var response = await _httpClient.GetAsync(query);
-
-            var data = await response.Content.ReadAsStringAsync();
-            var resultWrapper = JsonConvert.DeserializeObject<ResultWrapper>(data) as ResultWrapper;
-            var result = resultWrapper.Articles.Select(x => new ArticleView
+            var articleViews = articles.Select(x => new ArticleView
             {
                 Heading = x.Title,
                 Updated = x.UpdatedDate,
                 Link = x.ShortUrl
             });
 
-            return result;
+            return articleViews;
         }
 
-        private async Task<IEnumerable<ArticleGroupByDateView>> GetGroups(HttpResponseMessage response)
+        private async Task<IEnumerable<ArticleGroupByDateView>> GetGroupViewsAsync(string section = null)
         {
-            var data = await response.Content.ReadAsStringAsync();
-            var resultWrapper = JsonConvert.DeserializeObject<ResultWrapper>(data) as ResultWrapper;
-            var result = from article in resultWrapper.Articles
-                group article by article.UpdatedDate.Date into g
-                select new ArticleGroupByDateView { Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count() };
+            var articles = await _httpClientService.GetArticlesAsync(section);
 
-            return result;
+            var articleGroupByDateViews = from article in articles
+                        group article by article.UpdatedDate.Date into g
+                        select new ArticleGroupByDateView { Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count() };
+
+            return articleGroupByDateViews;
         }
 
         private DateTime ParseDate(string inputDate)
         {
-            var parsedDateTime = (DateTime)DateTime.Parse(inputDate);
+            var parsedDateTime = DateTime.Parse(inputDate);
             return parsedDateTime.Date;
         }
 

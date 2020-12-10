@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace NancyWebApiCore.Modules
+namespace NancyWebApiCore.Views
 {
     public class ArticleView
     {

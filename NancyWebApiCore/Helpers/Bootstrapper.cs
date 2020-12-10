@@ -23,6 +23,7 @@ namespace NancyWebApiCore.Helpers
             base.ConfigureApplicationContainer(container);
 
             container.Register<IAppConfiguration>(appConfig);
+            container.Register<IHttpClientService, HttpClientService>();
             container.Register<IArticleService, ArticleService>();
         }
     }

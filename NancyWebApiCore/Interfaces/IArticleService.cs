@@ -9,11 +9,11 @@ namespace NancyWebApiCore.Interfaces
 {
     public interface IArticleService
     {
-        Task<bool> IsServiceWorking();
-        Task<IEnumerable<ArticleView>> GetArticlesBySection(string section);
-        Task<ArticleView> GetFirstArticleBySection(string section);
-        Task<IEnumerable<ArticleView>> GetArticlesBySectionAndDate(string section, string stringDate);
-        Task<ArticleView> GetArticlesByShortUrl(string shortUrl);
-        Task<IEnumerable<ArticleGroupByDateView>> GetArticleGroupByDateViews(string section);
+        Task<bool> IsServiceWorkingAsync();
+        Task<IEnumerable<ArticleView>> GetArticlesBySectionAsync(string section);
+        Task<ArticleView> GetFirstArticleBySectionAsync(string section);
+        Task<IEnumerable<ArticleView>> GetArticlesBySectionAndDateAsync(string section, string stringDate);
+        Task<ArticleView> GetArticlesByShortUrlAsync(string shortUrl);
+        Task<IEnumerable<ArticleGroupByDateView>> GetArticleGroupByDateViewsAsync(string section);
     }
 }
