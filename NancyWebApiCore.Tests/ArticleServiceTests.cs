@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
-using Nancy.Json;
 using NancyWebApiCore.Entities;
 using NancyWebApiCore.Interfaces;
 using NancyWebApiCore.Services;
@@ -39,6 +38,7 @@ namespace NancyWebApiCore.Tests
 
             _articles = new List<Article>();
             _articleViews = new List<ArticleView>();
+
             foreach (var item in data)
             {
                 _articles.Add(new Article{Title = item.Item1, UpdatedDate = item.Item2, ShortUrl = item.Item3});
@@ -134,7 +134,7 @@ namespace NancyWebApiCore.Tests
         public async Task GetArticlesByShortUrlAsync_ShortUrlIsValid_ReturnArticleView()
         {
             //Arrange
-            var shortUrl = "short_4";
+            var shortUrl = "short_4"; // length == 7
             var section = "";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
 
@@ -151,7 +151,7 @@ namespace NancyWebApiCore.Tests
         public async Task GetArticlesByShortUrlAsync_ShortUrlIsNotValid_ThrowException()
         {
             //Arrange
-            var shortUrl = "short_4_";
+            var shortUrl = "short_4_"; // length != 7
             var section = "";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
 
