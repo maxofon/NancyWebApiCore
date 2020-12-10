@@ -28,8 +28,13 @@ namespace NancyWebApiCore.Tests
                 ("Heading_1", DateTime.Today.AddDays(-1), "https://nyti.ms/short_1"),
                 ("Heading_2", DateTime.Today.AddDays(-1), "https://nyti.ms/short_2"),
                 ("Heading_3", DateTime.Today, "https://nyti.ms/short_3"),
-                ("Heading_4", DateTime.Today.AddDays(1), "https://nyti.ms/short_4"),
-                ("Heading_5", DateTime.Today.AddDays(1), "https://nyti.ms/short_5")
+                ("Heading_4", DateTime.Today.AddDays(-2), "https://nyti.ms/short_4"),
+                ("Heading_5", DateTime.Today.AddDays(-2), "https://nyti.ms/short_5"),
+                ("Heading_6", DateTime.Today.AddDays(-3), "https://nyti.ms/short_6"),
+                ("Heading_7", DateTime.Today.AddDays(-3), "https://nyti.ms/short_7"),
+                ("Heading_8", DateTime.Today, "https://nyti.ms/short_8"),
+                ("Heading_9", DateTime.Today, "https://nyti.ms/short_9"),
+                ("Heading_10", DateTime.Today, "https://nyti.ms/short_10"),
             };
 
             _articles = new List<Article>();
@@ -168,8 +173,9 @@ namespace NancyWebApiCore.Tests
             var expectedResult = new List<ArticleGroupByDateView>
             {
                 new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd"), Total = 2},
-                new ArticleGroupByDateView{Date = DateTime.Today.ToString("yyyy-MM-dd"), Total = 1},
-                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(1).ToString("yyyy-MM-dd"), Total = 2}
+                new ArticleGroupByDateView{Date = DateTime.Today.ToString("yyyy-MM-dd"), Total = 4},
+                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd"), Total = 2},
+                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd"), Total = 2}
             };
 
             //Act
