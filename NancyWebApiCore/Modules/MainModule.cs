@@ -5,9 +5,10 @@ using Newtonsoft.Json;
 
 namespace NancyWebApiCore.Modules
 {
-	public class MainModule : NancyModule
+    public class MainModule : NancyModule
     {
         private readonly IArticleService _articleService;
+
         public MainModule(IArticleService articleService)
         {
             _articleService = articleService;
@@ -18,13 +19,12 @@ namespace NancyWebApiCore.Modules
                 {
                     var result = await _articleService.IsServiceWorkingAsync();
                     var message = result ? "api is working :)" : "api is not working :(";
-                    return JsonConvert.SerializeObject(new { result = message });
+                    return JsonConvert.SerializeObject(new {result = message});
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
-                
             });
 
             Get("/list/{section}", async args =>
@@ -37,7 +37,7 @@ namespace NancyWebApiCore.Modules
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
             });
 
@@ -48,11 +48,10 @@ namespace NancyWebApiCore.Modules
                     var firstArticleView = await _articleService.GetFirstArticleBySectionAsync(args.section);
 
                     return JsonConvert.SerializeObject(firstArticleView);
-
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
             });
 
@@ -60,12 +59,13 @@ namespace NancyWebApiCore.Modules
             {
                 try
                 {
-                    var articleViews = await _articleService.GetArticlesBySectionAndDateAsync(args.section, args.updatedDate);
+                    var articleViews =
+                        await _articleService.GetArticlesBySectionAndDateAsync(args.section, args.updatedDate);
                     return JsonConvert.SerializeObject(articleViews);
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
             });
 
@@ -79,7 +79,7 @@ namespace NancyWebApiCore.Modules
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
             });
 
@@ -93,9 +93,8 @@ namespace NancyWebApiCore.Modules
                 }
                 catch (Exception e)
                 {
-                    return JsonConvert.SerializeObject(new { error = e.Message });
+                    return JsonConvert.SerializeObject(new {error = e.Message});
                 }
-
             });
         }
     }

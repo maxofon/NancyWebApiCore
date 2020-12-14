@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NancyWebApiCore.Modules;
 using NancyWebApiCore.Views;
 
 namespace NancyWebApiCore.Interfaces

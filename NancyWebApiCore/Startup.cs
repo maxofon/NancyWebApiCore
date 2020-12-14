@@ -10,6 +10,7 @@ namespace NancyWebApiCore
     public class Startup
     {
         private readonly IConfiguration _configuration;
+
         public Startup()
         {
             _configuration = new ConfigurationBuilder()
@@ -26,13 +27,10 @@ namespace NancyWebApiCore
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             var appConfig = new AppConfiguration();
-            ConfigurationBinder.Bind(_configuration, appConfig);
+            _configuration.Bind(appConfig);
             app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
         }
     }

@@ -24,7 +24,7 @@ namespace NancyWebApiCore.Services
 
         public async Task<IEnumerable<ArticleView>> GetArticlesBySectionAsync(string section)
         {
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
+            var articleViewsEnumerable = await GetArticleViewsAsync(section);
             var articleViews = articleViewsEnumerable.ToList();
 
             return articleViews;
@@ -32,7 +32,7 @@ namespace NancyWebApiCore.Services
 
         public async Task<ArticleView> GetFirstArticleBySectionAsync(string section)
         {
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
+            var articleViewsEnumerable = await GetArticleViewsAsync(section);
             var firstArticleView = articleViewsEnumerable.FirstOrDefault();
 
             return firstArticleView;
@@ -41,7 +41,7 @@ namespace NancyWebApiCore.Services
         public async Task<IEnumerable<ArticleView>> GetArticlesBySectionAndDateAsync(string section, string stringDate)
         {
             var updatedDate = ParseDate(stringDate);
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync(section);
+            var articleViewsEnumerable = await GetArticleViewsAsync(section);
             var articleViews = articleViewsEnumerable.Where(x => x.Updated.Date == updatedDate).ToList();
 
             return articleViews;
@@ -51,7 +51,7 @@ namespace NancyWebApiCore.Services
         {
             CheckUrl(shortUrl);
 
-            IEnumerable<ArticleView> articleViewsEnumerable = await GetArticleViewsAsync();
+            var articleViewsEnumerable = await GetArticleViewsAsync();
             var articleView = articleViewsEnumerable.FirstOrDefault(x => x.Link.EndsWith(shortUrl));
 
             return articleView;
@@ -83,8 +83,9 @@ namespace NancyWebApiCore.Services
             var articles = await _httpClientService.GetArticlesAsync(section);
 
             var articleGroupByDateViews = from article in articles
-                        group article by article.UpdatedDate.Date into g
-                        select new ArticleGroupByDateView { Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count() };
+                group article by article.UpdatedDate.Date
+                into g
+                select new ArticleGroupByDateView {Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count()};
 
             return articleGroupByDateViews;
         }
@@ -97,10 +98,7 @@ namespace NancyWebApiCore.Services
 
         private void CheckUrl(string url)
         {
-            if (url.Length != 7)
-            {
-                throw new Exception("Url should be in format XXXXXXX");
-            }
+            if (url.Length != 7) throw new Exception("Url should be in format XXXXXXX");
         }
     }
 }

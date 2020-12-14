@@ -41,8 +41,8 @@ namespace NancyWebApiCore.Tests
 
             foreach (var item in data)
             {
-                _articles.Add(new Article{Title = item.Item1, UpdatedDate = item.Item2, ShortUrl = item.Item3});
-                _articleViews.Add(new ArticleView{Heading = item.Item1, Updated = item.Item2, Link = item.Item3});
+                _articles.Add(new Article {Title = item.Item1, UpdatedDate = item.Item2, ShortUrl = item.Item3});
+                _articleViews.Add(new ArticleView {Heading = item.Item1, Updated = item.Item2, Link = item.Item3});
             }
         }
 
@@ -62,7 +62,7 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = _articleService.IsServiceWorkingAsync().Result;
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.IsServiceWorkingAsync());
             Assert.That(result, Is.True);
         }
@@ -76,7 +76,7 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = await _articleService.IsServiceWorkingAsync();
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.IsServiceWorkingAsync());
             Assert.That(result, Is.False);
         }
@@ -91,7 +91,7 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = await _articleService.GetArticlesBySectionAsync(section);
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(_articleViews));
         }
@@ -107,7 +107,7 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = await _articleService.GetFirstArticleBySectionAsync(section);
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(firstArticleView));
         }
@@ -124,9 +124,9 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = await _articleService.GetArticlesBySectionAndDateAsync(section, updatedDateString);
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
-            Assert.AreEqual(JsonConvert.SerializeObject(result), 
+            Assert.AreEqual(JsonConvert.SerializeObject(result),
                 JsonConvert.SerializeObject(_articleViews.Where(x => x.Updated == updatedDate)));
         }
 
@@ -141,9 +141,9 @@ namespace NancyWebApiCore.Tests
             //Act
             var result = await _articleService.GetArticlesByShortUrlAsync(shortUrl);
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
-            Assert.AreEqual(JsonConvert.SerializeObject(result), 
+            Assert.AreEqual(JsonConvert.SerializeObject(result),
                 JsonConvert.SerializeObject(_articleViews.FirstOrDefault(x => x.Link.EndsWith(shortUrl))));
         }
 
@@ -157,11 +157,8 @@ namespace NancyWebApiCore.Tests
 
             //Act
 
-            // Assert
-            Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await _articleService.GetArticlesByShortUrlAsync(section);
-            });
+            //Assert
+            Assert.ThrowsAsync<Exception>(async () => { await _articleService.GetArticlesByShortUrlAsync(section); });
         }
 
         [Test]
@@ -172,16 +169,16 @@ namespace NancyWebApiCore.Tests
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
             var expectedResult = new List<ArticleGroupByDateView>
             {
-                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd"), Total = 2},
-                new ArticleGroupByDateView{Date = DateTime.Today.ToString("yyyy-MM-dd"), Total = 4},
-                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd"), Total = 2},
-                new ArticleGroupByDateView{Date = DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd"), Total = 2}
+                new ArticleGroupByDateView {Date = DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd"), Total = 2},
+                new ArticleGroupByDateView {Date = DateTime.Today.ToString("yyyy-MM-dd"), Total = 4},
+                new ArticleGroupByDateView {Date = DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd"), Total = 2},
+                new ArticleGroupByDateView {Date = DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd"), Total = 2}
             };
 
             //Act
             var result = await _articleService.GetArticleGroupByDateViewsAsync(section);
 
-            // Assert
+            //Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(expectedResult));
         }

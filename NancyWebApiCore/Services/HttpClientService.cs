@@ -9,8 +9,8 @@ namespace NancyWebApiCore.Services
 {
     public class HttpClientService : IHttpClientService
     {
-        private readonly HttpClient _httpClient;
         private readonly IAppConfiguration _config;
+        private readonly HttpClient _httpClient;
 
         public HttpClientService(HttpClient httpClient, IAppConfiguration config)
         {

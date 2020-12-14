@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using Nancy;
 using Nancy.Testing;
-using NancyWebApiCore.Entities;
 using NancyWebApiCore.Helpers;
 using NancyWebApiCore.Interfaces;
-using NancyWebApiCore.Services;
 using NancyWebApiCore.Views;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -19,47 +13,32 @@ namespace NancyWebApiCore.Tests
     [TestFixture]
     public class MainModuleTests
     {
-        private Browser _browser;
-        private Mock<IAppConfiguration> _config;
-
         [SetUp]
         public void Setup()
         {
             _config = new Mock<IAppConfiguration>();
-            
-                
+
+
             var bootsrapper = new Bootstrapper(_config.Object);
             _browser = new Browser(bootsrapper);
         }
 
-        [Test]
-        public async Task GetHome_ApiKeyIsValid_ReturnServiceIsWorking()
-        {
-            //Arrange
-            _config.Setup(x => x.NytSettings)
-                .Returns(new NytSettings { ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ", BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home" });
-
-            //Act
-            var response = await _browser.Get("/", (with) => {
-                with.HttpRequest();
-            });
-
-            // Assert
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
-            Assert.That(response.Body.AsString().Contains("is working"));
-        }
+        private Browser _browser;
+        private Mock<IAppConfiguration> _config;
 
         [Test]
         public async Task GetHome_ApiKeyIsNotValid_ReturnServiceIsNotWorking()
         {
             //Arrange
             _config.Setup(x => x.NytSettings)
-                .Returns(new NytSettings { ApiKey = "not_valid_key", BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home" });
+                .Returns(new NytSettings
+                {
+                    ApiKey = "not_valid_key",
+                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                });
 
             //Act
-            var response = await _browser.Get("/", (with) => {
-                with.HttpRequest();
-            });
+            var response = await _browser.Get("/", with => { with.HttpRequest(); });
 
             // Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
@@ -67,17 +46,38 @@ namespace NancyWebApiCore.Tests
         }
 
         [Test]
+        public async Task GetHome_ApiKeyIsValid_ReturnServiceIsWorking()
+        {
+            //Arrange
+            _config.Setup(x => x.NytSettings)
+                .Returns(new NytSettings
+                {
+                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
+                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                });
+
+            //Act
+            var response = await _browser.Get("/", with => { with.HttpRequest(); });
+
+            // Assert
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
+            Assert.That(response.Body.AsString().Contains("is working"));
+        }
+
+        [Test]
         public async Task GetListSection_SectionPassed_ReturnJson()
         {
             //Arrange
             _config.Setup(x => x.NytSettings)
-                .Returns(new NytSettings { ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ", BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home" });
+                .Returns(new NytSettings
+                {
+                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
+                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                });
             var section = "health";
 
             //Act
-            var response = await _browser.Get($"/list/{section}", (with) => {
-                with.HttpRequest();
-            });
+            var response = await _browser.Get($"/list/{section}", with => { with.HttpRequest(); });
 
             var resultString = response.Body.AsString();
             var items = JsonConvert.DeserializeObject<ArticleView[]>(resultString);
@@ -92,14 +92,15 @@ namespace NancyWebApiCore.Tests
         {
             //Arrange
             _config.Setup(x => x.NytSettings)
-                .Returns(new NytSettings { ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ", 
-                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home" });
+                .Returns(new NytSettings
+                {
+                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
+                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                });
             var section = "health";
 
             //Act
-            var response = await _browser.Get($"/list/{section}/first", (with) => {
-                with.HttpRequest();
-            });
+            var response = await _browser.Get($"/list/{section}/first", with => { with.HttpRequest(); });
 
             var resultString = response.Body.AsString();
             var items = JsonConvert.DeserializeObject<ArticleView>(resultString);
@@ -107,6 +108,5 @@ namespace NancyWebApiCore.Tests
             // Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
         }
-
     }
 }
