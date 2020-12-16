@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NancyWebApiCore.Interfaces;
+using DataAccess.Data;
 using NancyWebApiCore.Views;
 
 namespace NancyWebApiCore.Services
@@ -82,12 +82,17 @@ namespace NancyWebApiCore.Services
         {
             var articles = await _httpClientService.GetArticlesAsync(section);
 
-            var articleGroupByDateViews = from article in articles
-                group article by article.UpdatedDate.Date
-                into g
-                select new ArticleGroupByDateView {Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count()};
+            if (articles != null)
+            {
+                var articleGroupByDateViews = from article in articles
+                    group article by article.UpdatedDate.Date
+                    into g
+                    select new ArticleGroupByDateView {Date = g.Key.ToString("yyyy-MM-dd"), Total = g.Count()};
 
-            return articleGroupByDateViews;
+                return articleGroupByDateViews;
+            }
+
+            return null;
         }
 
         private DateTime ParseDate(string inputDate)

@@ -1,6 +1,7 @@
-﻿using Nancy;
+﻿using DataAccess.Configs;
+using DataAccess.Data;
+using Nancy;
 using Nancy.TinyIoc;
-using NancyWebApiCore.Interfaces;
 using NancyWebApiCore.Services;
 
 namespace NancyWebApiCore.Helpers

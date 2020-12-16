@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWebApiCore", "NancyWebApiCore\NancyWebApiCore.csproj", "{2670C400-05B0-46E0-9FAD-762E3AD59F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NancyWebApiCore", "NancyWebApiCore\NancyWebApiCore.csproj", "{2670C400-05B0-46E0-9FAD-762E3AD59F4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWebApiCore.Tests", "NancyWebApiCore.Tests\NancyWebApiCore.Tests.csproj", "{FFA01383-DD86-4412-8667-DD025C233BD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NancyWebApiCore.Tests", "NancyWebApiCore.Tests\NancyWebApiCore.Tests.csproj", "{FFA01383-DD86-4412-8667-DD025C233BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{B305A785-B7FA-4C49-8388-6E2D4E8E90C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Tests", "DataAccess.Tests\DataAccess.Tests.csproj", "{6774430C-176C-4D57-A53D-18C5AF88B6C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{FFA01383-DD86-4412-8667-DD025C233BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFA01383-DD86-4412-8667-DD025C233BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFA01383-DD86-4412-8667-DD025C233BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B305A785-B7FA-4C49-8388-6E2D4E8E90C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B305A785-B7FA-4C49-8388-6E2D4E8E90C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B305A785-B7FA-4C49-8388-6E2D4E8E90C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B305A785-B7FA-4C49-8388-6E2D4E8E90C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6774430C-176C-4D57-A53D-18C5AF88B6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6774430C-176C-4D57-A53D-18C5AF88B6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6774430C-176C-4D57-A53D-18C5AF88B6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6774430C-176C-4D57-A53D-18C5AF88B6C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

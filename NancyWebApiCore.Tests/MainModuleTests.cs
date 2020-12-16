@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using DataAccess.Configs;
 using Moq;
 using Nancy;
 using Nancy.Testing;
 using NancyWebApiCore.Helpers;
-using NancyWebApiCore.Interfaces;
 using NancyWebApiCore.Views;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -25,6 +25,9 @@ namespace NancyWebApiCore.Tests
 
         private Browser _browser;
         private Mock<IAppConfiguration> _config;
+        private readonly string _apiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ";
+        private readonly string _baseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}";
+        private readonly string _defaultSection = "home";
 
         [Test]
         public async Task GetHome_ApiKeyIsNotValid_ReturnServiceIsNotWorking()
@@ -34,13 +37,14 @@ namespace NancyWebApiCore.Tests
                 .Returns(new NytSettings
                 {
                     ApiKey = "not_valid_key",
-                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
                 });
 
             //Act
             var response = await _browser.Get("/", with => { with.HttpRequest(); });
 
-            // Assert
+            //Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
             Assert.That(response.Body.AsString().Contains("is not working"));
         }
@@ -52,29 +56,59 @@ namespace NancyWebApiCore.Tests
             _config.Setup(x => x.NytSettings)
                 .Returns(new NytSettings
                 {
-                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
-                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                    ApiKey = _apiKey,
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
                 });
 
             //Act
             var response = await _browser.Get("/", with => { with.HttpRequest(); });
 
-            // Assert
+            //Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
             Assert.That(response.Body.AsString().Contains("is working"));
         }
 
         [Test]
-        public async Task GetListSection_SectionPassed_ReturnJson()
+        public async Task GetListSection_NotValidSectionPassed_ReturnJsonWithError()
         {
             //Arrange
             _config.Setup(x => x.NytSettings)
                 .Returns(new NytSettings
                 {
-                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
-                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                    ApiKey = _apiKey,
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
                 });
-            var section = "health";
+            var section = "invalid_section";
+
+            //Act
+            var response = await _browser.Get($"/list/{section}", with => { with.HttpRequest(); });
+
+            var resultString = response.Body.AsString();
+            var items = JsonConvert.DeserializeObject<ArticleView[]>(resultString,
+                new JsonSerializerSettings {Error = (se, ev) => ev.ErrorContext.Handled = true});
+
+            //Assert
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
+            Assert.That(resultString.Contains("Section not found"));
+            Assert.Null(items);
+        }
+
+        [Test]
+        [TestCase("arts")]
+        [TestCase("home")]
+        [TestCase("health")]
+        public async Task GetListSection_ValidSectionPassed_ReturnJson(string section)
+        {
+            //Arrange
+            _config.Setup(x => x.NytSettings)
+                .Returns(new NytSettings
+                {
+                    ApiKey = _apiKey,
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
+                });
 
             //Act
             var response = await _browser.Get($"/list/{section}", with => { with.HttpRequest(); });
@@ -82,31 +116,55 @@ namespace NancyWebApiCore.Tests
             var resultString = response.Body.AsString();
             var items = JsonConvert.DeserializeObject<ArticleView[]>(resultString);
 
-            // Assert
+            //Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
             Assert.That(items.Length > 0, Is.True);
         }
 
         [Test]
-        public async Task GetListSectionFirst_SectionPassed_ReturnJson()
+        public async Task GetListSectionFirst_NotValidSectionPassed_ReturnJsonWithError()
         {
             //Arrange
             _config.Setup(x => x.NytSettings)
                 .Returns(new NytSettings
                 {
-                    ApiKey = "k0XA0k0jJGAVuv8Jr5wAIcKDGPuznmRJ",
-                    BaseUrl = "https://api.nytimes.com/svc/topstories/v2/{0}.json?api-key={1}", DefaultSection = "home"
+                    ApiKey = _apiKey,
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
+                });
+            var section = "invalid_section";
+
+            //Act
+            var response = await _browser.Get($"/list/{section}/first", with => { with.HttpRequest(); });
+            var resultString = response.Body.AsString();
+
+            //Assert
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
+            Assert.That(resultString.Contains("Section not found"));
+        }
+
+        [Test]
+        public async Task GetListSectionFirst_ValidSectionPassed_ReturnJsonWithError()
+        {
+            //Arrange
+            _config.Setup(x => x.NytSettings)
+                .Returns(new NytSettings
+                {
+                    ApiKey = _apiKey,
+                    BaseUrl = _baseUrl,
+                    DefaultSection = _defaultSection
                 });
             var section = "health";
 
             //Act
             var response = await _browser.Get($"/list/{section}/first", with => { with.HttpRequest(); });
-
             var resultString = response.Body.AsString();
-            var items = JsonConvert.DeserializeObject<ArticleView>(resultString);
+            var item = JsonConvert.DeserializeObject<ArticleView>(resultString,
+                new JsonSerializerSettings {Error = (se, ev) => ev.ErrorContext.Handled = true});
 
-            // Assert
+            //Assert
             Assert.That(HttpStatusCode.OK, Is.EqualTo(response.StatusCode));
+            Assert.NotNull(item);
         }
     }
 }

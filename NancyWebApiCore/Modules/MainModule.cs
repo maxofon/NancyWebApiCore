@@ -1,6 +1,6 @@
 ﻿using System;
 using Nancy;
-using NancyWebApiCore.Interfaces;
+using NancyWebApiCore.Services;
 using Newtonsoft.Json;
 
 namespace NancyWebApiCore.Modules
@@ -18,7 +18,8 @@ namespace NancyWebApiCore.Modules
                 try
                 {
                     var result = await _articleService.IsServiceWorkingAsync();
-                    var message = result ? "api is working :)" : "api is not working :(";
+                    var message = result ? "api is working" : "api is not working";
+
                     return JsonConvert.SerializeObject(new {result = message});
                 }
                 catch (Exception e)
@@ -32,6 +33,9 @@ namespace NancyWebApiCore.Modules
                 try
                 {
                     var articleViews = await _articleService.GetArticlesBySectionAsync(args.section);
+
+                    if (articleViews == null)
+                        return ReturnNullResult();
 
                     return JsonConvert.SerializeObject(articleViews);
                 }
@@ -47,6 +51,9 @@ namespace NancyWebApiCore.Modules
                 {
                     var firstArticleView = await _articleService.GetFirstArticleBySectionAsync(args.section);
 
+                    if (firstArticleView == null)
+                        return ReturnNullResult();
+
                     return JsonConvert.SerializeObject(firstArticleView);
                 }
                 catch (Exception e)
@@ -61,6 +68,10 @@ namespace NancyWebApiCore.Modules
                 {
                     var articleViews =
                         await _articleService.GetArticlesBySectionAndDateAsync(args.section, args.updatedDate);
+
+                    if (articleViews == null)
+                        return ReturnNullResult();
+
                     return JsonConvert.SerializeObject(articleViews);
                 }
                 catch (Exception e)
@@ -74,6 +85,9 @@ namespace NancyWebApiCore.Modules
                 try
                 {
                     var articleView = await _articleService.GetArticlesByShortUrlAsync(args.shortUrl);
+
+                    if (articleView == null)
+                        return ReturnNullResult();
 
                     return JsonConvert.SerializeObject(articleView);
                 }
@@ -89,6 +103,9 @@ namespace NancyWebApiCore.Modules
                 {
                     var articleGroupByDateViews = await _articleService.GetArticleGroupByDateViewsAsync(args.section);
 
+                    if (articleGroupByDateViews == null)
+                        return ReturnNullResult();
+
                     return JsonConvert.SerializeObject(articleGroupByDateViews);
                 }
                 catch (Exception e)
@@ -96,6 +113,12 @@ namespace NancyWebApiCore.Modules
                     return JsonConvert.SerializeObject(new {error = e.Message});
                 }
             });
+        }
+
+        private string ReturnNullResult()
+        {
+            var message = "There is no data for this request";
+            return JsonConvert.SerializeObject(new {message});
         }
     }
 }
