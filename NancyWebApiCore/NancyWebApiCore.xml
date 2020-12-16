@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NancyWebApiCore</name>
+    </assembly>
+    <members>
+        <member name="M:NancyWebApiCore.Services.IArticleService.IsServiceWorkingAsync">
+            <summary>
+                Check if the service is working
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:NancyWebApiCore.Services.IArticleService.GetArticlesBySectionAsync(System.String)">
+            <summary>
+                Get enumeration of NancyWebApiCore.Views.ArticleViews by section
+            </summary>
+            <param name="section"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NancyWebApiCore.Services.IArticleService.GetFirstArticleBySectionAsync(System.String)">
+            <summary>
+                Get first NancyWebApiCore.Views.ArticleView by section
+            </summary>
+            <param name="section"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NancyWebApiCore.Services.IArticleService.GetArticlesBySectionAndDateAsync(System.String,System.String)">
+            <summary>
+                Get enumeration of NancyWebApiCore.Views.ArticleViews by section and date
+            </summary>
+            <param name="section"></param>
+            <param name="stringDate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NancyWebApiCore.Services.IArticleService.GetArticlesByShortUrlAsync(System.String)">
+            <summary>
+                Get first or default NancyWebApiCore.Views.ArticleView by shortUrl
+            </summary>
+            <param name="shortUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NancyWebApiCore.Services.IArticleService.GetArticleGroupByDateViewsAsync(System.String)">
+            <summary>
+                Get enumeration of NancyWebApiCore.Views.ArticleGroupByDateView by section
+            </summary>
+            <param name="section"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
