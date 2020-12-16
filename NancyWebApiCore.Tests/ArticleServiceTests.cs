@@ -56,7 +56,7 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetArticleGroupByDateViewsAsync_SectionPassed_ReturnArticleGroupByDateViews()
         {
-            //Arrange
+            // Arrange
             var section = "health";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
             var expectedResult = new List<ArticleGroupByDateView>
@@ -67,10 +67,10 @@ namespace NancyWebApiCore.Tests
                 new ArticleGroupByDateView {Date = DateTime.Today.AddDays(-3).ToString("yyyy-MM-dd"), Total = 2}
             };
 
-            //Act
+            // Act
             var result = await _articleService.GetArticleGroupByDateViewsAsync(section);
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(expectedResult));
         }
@@ -78,16 +78,16 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetArticlesBySectionAndDateAsync_SectionAndDatePassed_ReturnArticleViews()
         {
-            //Arrange
+            // Arrange
             var section = "us";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
             var updatedDate = DateTime.Today.AddDays(1);
             var updatedDateString = updatedDate.Date.ToString("yyyy-MM-dd");
 
-            //Act
+            // Act
             var result = await _articleService.GetArticlesBySectionAndDateAsync(section, updatedDateString);
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result),
                 JsonConvert.SerializeObject(_articleViews.Where(x => x.Updated == updatedDate)));
@@ -96,14 +96,14 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetArticlesBySectionAndDateAsync_SectionAndInValidDatePassed_ThrowException()
         {
-            //Arrange
+            // Arrange
             var section = "us";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
             var updatedDateString = "abcdefg";
 
-            //Act
+            // Act
 
-            //Assert
+            // Assert
             Assert.ThrowsAsync<FormatException>(async () =>
             {
                 await _articleService.GetArticlesBySectionAndDateAsync(section, updatedDateString);
@@ -113,14 +113,14 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetArticlesBySectionAsync_SectionPassed_ReturnArticleViews()
         {
-            //Arrange
+            // Arrange
             var section = "arts";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
 
-            //Act
+            // Act
             var result = await _articleService.GetArticlesBySectionAsync(section);
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(_articleViews));
         }
@@ -128,29 +128,29 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetArticlesByShortUrlAsync_ShortUrlIsNotValid_ThrowException()
         {
-            //Arrange
+            // Arrange
             var shortUrl = "short_4_"; // length != 7
             var section = "";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
 
-            //Act
+            // Act
 
-            //Assert
+            // Assert
             Assert.ThrowsAsync<Exception>(async () => { await _articleService.GetArticlesByShortUrlAsync(section); });
         }
 
         [Test]
         public async Task GetArticlesByShortUrlAsync_ShortUrlIsValid_ReturnArticleView()
         {
-            //Arrange
+            // Arrange
             var shortUrl = "short_4"; // length == 7
             var section = "";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
 
-            //Act
+            // Act
             var result = await _articleService.GetArticlesByShortUrlAsync(shortUrl);
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result),
                 JsonConvert.SerializeObject(_articleViews.FirstOrDefault(x => x.Link.EndsWith(shortUrl))));
@@ -159,15 +159,15 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task GetFirstArticleBySectionAsync_SectionPassed_ReturnArticleView()
         {
-            //Arrange
+            // Arrange
             var section = "health";
             _clientService.Setup(x => x.GetArticlesAsync(section)).ReturnsAsync(_articles);
             var firstArticleView = _articleViews.FirstOrDefault();
 
-            //Act
+            // Act
             var result = await _articleService.GetFirstArticleBySectionAsync(section);
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.GetArticlesAsync(section));
             Assert.AreEqual(JsonConvert.SerializeObject(result), JsonConvert.SerializeObject(firstArticleView));
         }
@@ -175,13 +175,13 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task IsServiceWorkingAsync_ServerIsNotWorking_ReturnFalse()
         {
-            //Arrange
+            // Arrange
             _clientService.Setup(x => x.IsServiceWorkingAsync()).ReturnsAsync(false);
 
-            //Act
+            // Act
             var result = await _articleService.IsServiceWorkingAsync();
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.IsServiceWorkingAsync());
             Assert.That(result, Is.False);
         }
@@ -189,13 +189,13 @@ namespace NancyWebApiCore.Tests
         [Test]
         public async Task IsServiceWorkingAsync_ServerIsWorking_ReturnTrue()
         {
-            //Arrange
+            // Arrange
             _clientService.Setup(x => x.IsServiceWorkingAsync()).ReturnsAsync(true);
 
-            //Act
+            // Act
             var result = _articleService.IsServiceWorkingAsync().Result;
 
-            //Assert
+            // Assert
             _clientService.Verify(cs => cs.IsServiceWorkingAsync());
             Assert.That(result, Is.True);
         }
