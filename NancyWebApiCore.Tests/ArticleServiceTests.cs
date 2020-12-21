@@ -94,7 +94,7 @@ namespace NancyWebApiCore.Tests
         }
 
         [Test]
-        public async Task GetArticlesBySectionAndDateAsync_SectionAndInValidDatePassed_ThrowException()
+        public void GetArticlesBySectionAndDateAsync_SectionAndInValidDatePassed_ThrowException()
         {
             // Arrange
             var section = "us";
@@ -126,7 +126,7 @@ namespace NancyWebApiCore.Tests
         }
 
         [Test]
-        public async Task GetArticlesByShortUrlAsync_ShortUrlIsNotValid_ThrowException()
+        public void GetArticlesByShortUrlAsync_ShortUrlIsNotValid_ThrowException()
         {
             // Arrange
             var shortUrl = "short_4_"; // length != 7
@@ -136,7 +136,7 @@ namespace NancyWebApiCore.Tests
             // Act
 
             // Assert
-            Assert.ThrowsAsync<Exception>(async () => { await _articleService.GetArticlesByShortUrlAsync(section); });
+            Assert.ThrowsAsync<Exception>(async () => { await _articleService.GetArticlesByShortUrlAsync(shortUrl); });
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace NancyWebApiCore.Tests
         }
 
         [Test]
-        public async Task IsServiceWorkingAsync_ServerIsWorking_ReturnTrue()
+        public void IsServiceWorkingAsync_ServerIsWorking_ReturnTrue()
         {
             // Arrange
             _clientService.Setup(x => x.IsServiceWorkingAsync()).ReturnsAsync(true);

@@ -105,7 +105,7 @@ namespace DataAccess.Tests
         }
 
         [Test]
-        public async Task GetArticlesAsync_ServiceUnavailable_ThrowException()
+        public void GetArticlesAsync_ServiceUnavailable_ThrowException()
         {
             // Arrange
             var httpClient = MockHttpClient(HttpStatusCode.ServiceUnavailable, _content);
